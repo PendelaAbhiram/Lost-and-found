@@ -1,0 +1,78 @@
+{
+  "entities": {
+    "ItemReport": {
+      "title": "ItemReport",
+      "description": "A lost or found item report submitted by a user",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier of the item report" },
+        "type": { "type": "string", "enum": ["lost", "found"], "description": "Category of the report" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 100, "description": "Item name" },
+        "desc": { "type": "string", "minLength": 1, "maxLength": 1000, "description": "Item description" },
+        "location": { "type": "string", "minLength": 1, "maxLength": 200, "description": "Location item was lost or found" },
+        "date": { "type": "string", "minLength": 1, "maxLength": 50, "description": "Date item was lost or found" },
+        "phone": { "type": "string", "maxLength": 30, "description": "Contact phone number" },
+        "emoji": { "type": "string", "maxLength": 10, "description": "Emoji icon representative of the item" },
+        "status": { "type": "string", "enum": ["open", "solved"], "description": "Current resolution status" },
+        "user": { "type": "string", "maxLength": 120, "description": "User email address" },
+        "userId": { "type": "string", "maxLength": 128, "description": "UID of the reporting user" },
+        "userName": { "type": "string", "maxLength": 100, "description": "Display name of the user" },
+        "imageData": { "type": "string", "description": "Optional image thumbnail or photo url" },
+        "solvePhoto": { "type": "string", "description": "Optional handover photo upon resolution" },
+        "solveDate": { "type": "string", "maxLength": 50, "description": "Date when item was marked resolved" },
+        "submittedAt": { "type": "string", "description": "ISO timestamp string of initial report" }
+      },
+      "required": ["id", "type", "name", "desc", "location", "date", "status", "user", "userId", "submittedAt"]
+    },
+    "ReportFeedback": {
+      "title": "ReportFeedback",
+      "description": "User feedback regarding the reporting and resolution workflow",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier of the feedback record" },
+        "itemId": { "type": "string", "description": "Referenced item identifier" },
+        "itemName": { "type": "string", "maxLength": 100, "description": "Referenced item title" },
+        "itemType": { "type": "string", "enum": ["lost", "found"], "description": "Type of item" },
+        "userId": { "type": "string", "maxLength": 128, "description": "UID of the feedback submitter" },
+        "userEmail": { "type": "string", "maxLength": 120, "description": "Email of user" },
+        "userName": { "type": "string", "maxLength": 100, "description": "Name of user" },
+        "rating": { "type": "number", "description": "Rating score between 1 and 5" },
+        "comment": { "type": "string", "maxLength": 1000, "description": "Detailed remarks or feedback" },
+        "recommendation": { "type": "string", "enum": ["definitely", "maybe", "not_likely", ""], "description": "Recommendation response" },
+        "submittedAt": { "type": "string", "description": "ISO timestamp of feedback" },
+        "adminReviewed": { "type": "boolean", "description": "Whether reviewed by admin" }
+      },
+      "required": ["id", "itemId", "itemName", "itemType", "userId", "userEmail", "rating", "submittedAt"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128, "description": "Firebase Auth user identifier" },
+        "name": { "type": "string", "maxLength": 100, "description": "Full name of the user" },
+        "email": { "type": "string", "maxLength": 120, "description": "Email address" },
+        "phone": { "type": "string", "maxLength": 30, "description": "Contact phone number" }
+      },
+      "required": ["uid", "email"]
+    }
+  },
+  "firestore": {
+    "/items/{itemId}": {
+      "schema": "ItemReport",
+      "description": "Collection of all lost and found item reports"
+    },
+    "/feedbacks/{feedbackId}": {
+      "schema": "ReportFeedback",
+      "description": "User community feedbacks on item reporting"
+    },
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile directory"
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Trusted admin accounts directory"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Relief - Lost and Found",
+  "description": "Community lost and found platform with verified reports, handover tracking, and post-report user feedback collection.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
